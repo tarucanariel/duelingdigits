@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AAT's Dueling Digits</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>AAT's Dueling Digits</h1>
+  
+  <!-- Player name displays -->
+  <div id="player1-name-display" class="player-name-display">Player 1</div>
+  <div id="player2-name-display" class="player-name-display">Player 2</div>
+  
+  <!-- Name Input Modal -->
+  <div id="name-input-modal">
+    <div class="name-input-content">
+      <h2>ENTER PLAYER NAMES</h2>
+      <div class="input-group">
+        <label for="player1-name">Player 1 Name:</label>
+        <input type="text" id="player1-name" placeholder="Enter Player 1 name" maxlength="12">
+      </div>
+      <div class="input-group" id="player2-input-group">
+        <label for="player2-name">Player 2 Name:</label>
+        <input type="text" id="player2-name" placeholder="Enter Player 2 name" maxlength="12">
+      </div>
+      <button id="name-submit-btn">START GAME</button>
+    </div>
+  </div>
+
+  <!-- Mode Selection Screen -->
+  <div id="mode-selection">
+    <h2>SELECT GAME MODE</h2>
+    <div class="mode-buttons">
+      <button class="mode-button" onclick="showNameInput('computer')">VS COMPUTER</button>
+      <button class="mode-button" onclick="showNameInput('human')">VS HUMAN</button>
+    </div>
+  </div>
+
+  <div id="game-container" style="display: none;">
+    <div id="board"></div>
+    <div id="integer-pool"></div>
+    <div class="scoreboard">
+      <div class="score" id="score-player1">Player 1: 0.00</div>
+      <div class="score" id="score-player2">Player 2: 0.00</div>
+    </div>
+    <div id="turn-indicator">TURN: PLAYER 1</div>
+    <div id="control-buttons">
+      <button onclick="showModeSelection()">NEW GAME</button>
+      <button onclick="showInstructions()">INSTRUCTIONS</button>
+    </div>
+  </div>
+
+  <div id="game-over">
+    <div id="winner-text"></div>
+    <button onclick="showModeSelection()">PLAY AGAIN</button>
+  </div>
+
+  <!-- Instructions Modal -->
+  <div id="instructions-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>🔥 AAT's Dueling Digits 🔥</h2>
+      <div class="instructions-content">
+        <img src="assets/ariel.png" alt="Game Instructions">
+        <p>- PLAYER 1 controls ROWS (green cells)</p>
+        <p>- PLAYER 2 controls COLUMNS (blue cells)</p>
+        <p>- Drag numbers from the pool to your cells</p>
+        <p>- After all moves, scores are calculated:</p>
+        <ul>
+          <li>Player 1: Sum of ROW 2 + ROW 4</li>
+          <li>Player 2: Sum of COLUMN 2 + COLUMN 4</li>
+        </ul>
+        <p>- Operators follow standard math order (×÷ before +−)</p>
+        <p>- Highest score WINS!</p>
+      </div>
+    </div>
+  </div>
+
+  <audio id="laser-sound" src="assets/laser.mp3" preload="auto"></audio>
+  <audio id="explosion-sound" src="assets/explosion.mp3" preload="auto"></audio>
+  <audio id="win-sound" src="assets/win.mp3" preload="auto"></audio>
+
+  <script src="script.js"></script>
+    
+</body>
+</html>
