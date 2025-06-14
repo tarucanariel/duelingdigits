@@ -9,11 +9,9 @@
 <body>
   <h1>AAT's Dueling Digits</h1>
   
-  <!-- Player name displays -->
   <div id="player1-name-display" class="player-name-display">Player 1</div>
   <div id="player2-name-display" class="player-name-display">Player 2</div>
   
-  <!-- Name Input Modal -->
   <div id="name-input-modal">
     <div class="name-input-content">
       <h2>ENTER PLAYER NAMES</h2>
@@ -25,11 +23,14 @@
         <label for="player2-name">Player 2 Name:</label>
         <input type="text" id="player2-name" placeholder="Enter Player 2 name" maxlength="12">
       </div>
+      <div class="input-group">
+        <label for="game-timer">Time per Player (mm:ss - leave blank to disable timer):</label>
+        <input type="text" id="game-timer" placeholder="05:00" pattern="^$|[0-5][0-9]:[0-5][0-9]">
+      </div>
       <button id="name-submit-btn">START GAME</button>
     </div>
   </div>
 
-  <!-- Mode Selection Screen -->
   <div id="mode-selection">
     <h2>SELECT GAME MODE</h2>
     <div class="mode-buttons">
@@ -43,6 +44,8 @@
     <div id="integer-pool"></div>
     <div class="scoreboard">
       <div class="score" id="score-player1">Player 1: 0.00</div>
+      <div id="timer-player1" class="player-timer">00:00</div>
+      <div id="timer-player2" class="player-timer">00:00</div>
       <div class="score" id="score-player2">Player 2: 0.00</div>
     </div>
     <div id="turn-indicator">TURN: PLAYER 1</div>
@@ -57,7 +60,6 @@
     <button onclick="showModeSelection()">PLAY AGAIN</button>
   </div>
 
-  <!-- Instructions Modal -->
   <div id="instructions-modal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
@@ -74,8 +76,6 @@
         </ul>
         <p>- Operators follow standard math order (×÷ before +−)</p>
         <p>- Highest score WINS!</p>
-        <hr style="border: 1px solid #333; width: 50%;">
-        <p> *** This game is developed by Ariel A. Tarucan, Teacher III of Esperanza Senior High School, Misamis Oriental and is for Educational Purposes only © 2025 ***</p>
       </div>
     </div>
   </div>
@@ -85,6 +85,12 @@
   <audio id="win-sound" src="assets/win.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
+<footer>
+        <p>&copy; 2025 AAT's Dueling Digits</p>
+        <p>Developed by: Ariel A. Tarucan</p>
+        <p>Teacher III, Esperanza Senior High School, District of Kinoguitan, Division of Misamis Oriental</p>
+        <p>Created for research and educational purposes only.</p>
+    </footer>
     
 </body>
 </html>
