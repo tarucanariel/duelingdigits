@@ -45,6 +45,7 @@
     <div class="mode-buttons">
       <button class="mode-button" onclick="showNameInput('computer')">VS COMPUTER</button>
       <button class="mode-button" onclick="showNameInput('human')">VS HUMAN</button>
+      <button class="mode-button" onclick="startPracticeMode()">PRACTICE INTEGER ARITHMETIC TEST</button>
     </div>
   </div>
 
@@ -89,6 +90,31 @@
     </div>
   </div>
 
+  <div id="practice-modal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+      <span class="close" onclick="closePracticeModal()">&times;</span>
+      <h2>PRACTICE INTEGER ARITHMETIC TEST</h2>
+      <div id="practice-container">
+        <div id="practice-timer">Time: 00:00</div>
+        <div id="practice-questions"></div>
+        <button id="submit-practice" onclick="submitPracticeTest()">SUBMIT TEST</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="practice-results" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closePracticeResults()">&times;</span>
+      <h2>PRACTICE TEST RESULTS</h2>
+      <div id="results-content">
+        <p id="score-display"></p>
+        <p id="accuracy-display"></p>
+        <p id="time-display"></p>
+        <button onclick="closePracticeResults()">OK</button>
+      </div>
+    </div>
+  </div>
+
   <audio id="laser-sound" src="assets/laser.mp3" preload="auto"></audio>
   <audio id="explosion-sound" src="assets/explosion.mp3" preload="auto"></audio>
   <audio id="win-sound" src="assets/win.mp3" preload="auto"></audio>
@@ -96,7 +122,7 @@
   <script src="script.js"></script>
 <footer>
         <p>&copy; 2025 AAT's Dueling Digits</p>
-        <p>Developed by: Ariel A. Tarucan <i>[ariel.tarucan@deped.gov.ph]</i></p>
+        <p>Developed by: Ariel A. Tarucan</p>
         <p>Teacher III, Esperanza Senior High School, District of Kinoguitan, Division of Misamis Oriental</p>
         <p>Created for research and educational purposes only.</p>
     </footer>
