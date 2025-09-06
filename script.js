@@ -40,6 +40,10 @@ const winSound = document.getElementById("win-sound");
 const timerPlayer1Display = document.getElementById("timer-player1");
 const timerPlayer2Display = document.getElementById("timer-player2");
 
+// ===== NEW AUDIO ELEMENTS =====
+const arielSound = new Audio("assets/iloveyouariel.mp3");
+const wowSound = new Audio("assets/wow.mp3");
+
 
 // ===== GAME FUNCTIONS =====
 function showModeSelection() {
@@ -87,6 +91,13 @@ function startGameWithNames() {
     const p1Name = document.getElementById("player1-name").value.trim();
     const p2Name = document.getElementById("player2-name").value.trim();
     const timerInput = document.getElementById("game-timer").value.trim();
+
+    // ===== NEW CODE: Check if either player is named "Ariel" =====
+    if (p1Name.toLowerCase() === "ariel" || p2Name.toLowerCase() === "ariel") {
+        arielSound.currentTime = 0;
+        arielSound.play();
+    }
+    // ===== END OF NEW CODE =====
 
     // Check if timer input is provided
     if (timerInput !== "") {
@@ -852,6 +863,13 @@ function submitPracticeTest() {
         }
     });
     
+    // ===== NEW CODE: Play wow sound if perfect score =====
+    if (correctCount === 10) {
+        wowSound.currentTime = 0;
+        wowSound.play();
+    }
+    // ===== END OF NEW CODE =====
+    
     const accuracy = (correctCount / 10) * 100;
     const elapsedSeconds = Math.floor((Date.now() - practiceStartTime) / 1000);
     const minutes = Math.floor(elapsedSeconds / 60);
@@ -893,4 +911,3 @@ document.getElementById("game-timer").addEventListener("keypress", function(even
         startGameWithNames();
     }
 });
-
