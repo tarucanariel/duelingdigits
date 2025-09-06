@@ -27,6 +27,11 @@ let useTimer = false; // Flag to enable/disable timers
 let operatorRevealQueue = []; // Stores the coordinates of operator cells to be revealed
 const operatorRevealMoves = [2, 4, 6]; // Moves at which operators are revealed (1st after 2, 2nd after 4, 3rd & 4th after 6)
 
+// Practice test variables
+let practiceQuestions = [];
+let practiceAnswers = {};
+let practiceStartTime = 0;
+let practiceTimerInterval = null;
 
 // ===== DOM ELEMENTS =====
 const laserSound = document.getElementById("laser-sound");
@@ -650,6 +655,216 @@ function showInstructions() {
             modal.style.display = "none";
         }
     }
+}
+
+// ===== PRACTICE TEST FUNCTIONS =====
+function startPracticeMode() {
+    document.getElementById("mode-selection").style.display = "none";
+    generatePracticeQuestions();
+    displayPracticeQuestions();
+    startPracticeTimer();
+    document.getElementById("practice-modal").style.display = "block";
+}
+
+function closePracticeModal() {
+    document.getElementById("practice-modal").style.display = "none";
+    clearInterval(practiceTimerInterval);
+    showModeSelection();
+}
+
+function closePracticeResults() {
+    document.getElementById("practice-results").style.display = "none";
+    showModeSelection();
+}
+
+function generatePracticeQuestions() {
+    practiceQuestions = [];
+    practiceAnswers = {};
+    
+    const operators = ['+', '−', '×'];
+    
+    for (let i = 0; i < 10; i++) {
+        let validQuestion = false;
+        let num1, num2, num3, op1, op2, answer;
+        
+        while (!validQuestion) {
+            // Generate random numbers between -10 and 10, excluding 0
+            num1 = Math.floor(Math.random() * 21) - 10;
+            if (num1 === 0) num1 = 1;
+            
+            num2 = Math.floor(Math.random() * 21) - 10;
+            if (num2 === 0) num2 = 1;
+            
+            num3 = Math.floor(Math.random() * 21) - 10;
+            if (num3 === 0) num3 = 1;
+            
+            // Select random operators
+            op1 = operators[Math.floor(Math.random() * operators.length)];
+            op2 = operators[Math.floor(Math.random() * operators.length)];
+            
+            // Calculate the answer
+            answer = calculateAnswer(num1, num2, num3, op1, op2);
+            
+            // Check if the answer is an integer
+            if (Number.isInteger(answer)) {
+                validQuestion = true;
+            }
+        }
+        
+        // Format the question
+        const question = `${num1} ${op1} ${num2} ${op2} ${num3}`;
+        
+        // Generate options (one correct, three incorrect)
+        const options = generateOptions(answer);
+        
+        practiceQuestions.push({
+            question,
+            options,
+            answer
+        });
+    }
+}
+
+function calculateAnswer(num1, num2, num3, op1, op2) {
+    // Apply operator precedence: multiplication first
+    let result;
+    
+    if (op1 === '×') {
+        result = num1 * num2;
+        result = applyOperation(result, num3, op2);
+    } else if (op2 === '×') {
+        result = num2 * num3;
+        result = applyOperation(num1, result, op1);
+    } else {
+        // No multiplication, left to right
+        result = applyOperation(num1, num2, op1);
+        result = applyOperation(result, num3, op2);
+    }
+    
+    return result;
+}
+
+function applyOperation(a, b, op) {
+    switch (op) {
+        case '+': return a + b;
+        case '−': return a - b;
+        case '×': return a * b;
+        default: return a + b;
+    }
+}
+
+function generateOptions(correctAnswer) {
+    const options = [correctAnswer];
+    
+    // Generate three unique wrong answers
+    while (options.length < 4) {
+        // Vary the wrong answer based on the correct answer
+        let wrongAnswer;
+        if (correctAnswer === 0) {
+            wrongAnswer = Math.floor(Math.random() * 21) - 10;
+        } else {
+            const variation = Math.floor(Math.random() * 5) + 1;
+            const sign = Math.random() > 0.5 ? 1 : -1;
+            wrongAnswer = correctAnswer + (variation * sign);
+        }
+        
+        // Ensure the wrong answer is different from all existing options
+        if (!options.includes(wrongAnswer)) {
+            options.push(wrongAnswer);
+        }
+    }
+    
+    // Shuffle the options
+    return options.sort(() => Math.random() - 0.5);
+}
+
+function displayPracticeQuestions() {
+    const container = document.getElementById("practice-questions");
+    container.innerHTML = "";
+    
+    practiceQuestions.forEach((q, index) => {
+        const questionDiv = document.createElement("div");
+        questionDiv.className = "practice-question";
+        
+        const questionText = document.createElement("p");
+        questionText.textContent = `${index + 1}. ${q.question} = ?`;
+        questionDiv.appendChild(questionText);
+        
+        const optionsDiv = document.createElement("div");
+        optionsDiv.className = "practice-options";
+        
+        const optionLetters = ['a', 'b', 'c', 'd'];
+        q.options.forEach((option, optIndex) => {
+            const optionDiv = document.createElement("div");
+            optionDiv.className = "practice-option";
+            optionDiv.textContent = `${optionLetters[optIndex]}) ${option}`;
+            optionDiv.dataset.option = optionLetters[optIndex];
+            optionDiv.dataset.value = option;
+            
+            optionDiv.onclick = function() {
+                // Remove selected class from all options in this question
+                const allOptions = optionsDiv.querySelectorAll(".practice-option");
+                allOptions.forEach(opt => opt.classList.remove("selected"));
+                
+                // Add selected class to clicked option
+                this.classList.add("selected");
+                
+                // Store the answer
+                practiceAnswers[index] = option;
+            };
+            
+            optionsDiv.appendChild(optionDiv);
+        });
+        
+        questionDiv.appendChild(optionsDiv);
+        container.appendChild(questionDiv);
+    });
+}
+
+function startPracticeTimer() {
+    practiceStartTime = Date.now();
+    const timerElement = document.getElementById("practice-timer");
+    
+    clearInterval(practiceTimerInterval);
+    practiceTimerInterval = setInterval(() => {
+        const elapsedSeconds = Math.floor((Date.now() - practiceStartTime) / 1000);
+        const minutes = Math.floor(elapsedSeconds / 60);
+        const seconds = elapsedSeconds % 60;
+        
+        timerElement.textContent = `Time: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }, 1000);
+}
+
+function submitPracticeTest() {
+    // Check if all questions are answered
+    if (Object.keys(practiceAnswers).length < 10) {
+        alert("Please answer all questions before submitting.");
+        return;
+    }
+    
+    clearInterval(practiceTimerInterval);
+    
+    // Calculate score
+    let correctCount = 0;
+    practiceQuestions.forEach((q, index) => {
+        if (practiceAnswers[index] === q.answer) {
+            correctCount++;
+        }
+    });
+    
+    const accuracy = (correctCount / 10) * 100;
+    const elapsedSeconds = Math.floor((Date.now() - practiceStartTime) / 1000);
+    const minutes = Math.floor(elapsedSeconds / 60);
+    const seconds = elapsedSeconds % 60;
+    
+    // Display results
+    document.getElementById("score-display").textContent = `Score: ${correctCount} out of 10`;
+    document.getElementById("accuracy-display").textContent = `Accuracy: ${accuracy.toFixed(1)}%`;
+    document.getElementById("time-display").textContent = `Time: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    // Show results modal
+    document.getElementById("practice-modal").style.display = "none";
+    document.getElementById("practice-results").style.display = "block";
 }
 
 // Set up name input submission
