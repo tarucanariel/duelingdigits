@@ -838,7 +838,7 @@ function startPracticeTimer() {
 function submitPracticeTest() {
     // Check if all questions are answered
     if (Object.keys(practiceAnswers).length < 10) {
-        alert("Please answer all questions before submitting.");
+        alert("My dear student, please answer all items before submitting.");
         return;
     }
     
@@ -893,3 +893,4 @@ document.getElementById("game-timer").addEventListener("keypress", function(even
         startGameWithNames();
     }
 });
+
